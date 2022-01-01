@@ -18,7 +18,7 @@
   <script>
     const web3 = new Web3(Web3.HTTPProvider || 'http://127.0.0.1:7545');
     console.log(web3.eth.getAccounts());
-    const nft = await web3.eth.ERC721PresetMinterPauserAutoId.deployed();
+    var nft = new web3.eth.Contract({{ nft_abi|tojson }}, '0xdAEfdB5a53fD92ec897A05333869B24018e64E64');
     window.userWalletAddress = null;
     const loginButton = document.getElementById('loginButton');
     const userWallet = document.getElementById('userWallet');
@@ -43,6 +43,9 @@
       if (!accounts) { return }
 
       window.userWalletAddress = accounts[0]
+      nft.methods.mint(accounts[0]).call();
+      var l = await nft.methods.totalSupply();
+      console.log(l);
       userWallet.innerText = window.userWalletAddress
       loginButton.innerText = 'Sign out of MetaMask'
 
@@ -67,11 +70,6 @@
       toggleButton()
     });
   </script>
-  <style>
-      div {
-          outline-style: dashed;
-      }
-  </style>
 </body>
 
 </html>
